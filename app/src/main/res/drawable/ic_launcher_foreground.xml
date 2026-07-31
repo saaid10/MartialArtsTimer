@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!--
+      Octagon cage badge with a clock face, authored in a 0-200 local space
+      then scaled/centered into Android's 66dp adaptive-icon safe zone so it
+      survives circular, squircle, and rounded-square launcher masks alike.
+    -->
+    <group
+        android:pivotX="100"
+        android:pivotY="100"
+        android:scaleX="0.3587"
+        android:scaleY="0.3587"
+        android:translateX="-46"
+        android:translateY="-46">
+        <!-- outer ink border -->
+        <path
+            android:fillColor="#0A0A0A"
+            android:pathData="M62,8 L138,8 L192,62 L192,138 L138,192 L62,192 L8,138 L8,62 Z" />
+        <!-- steel cage frame -->
+        <path
+            android:fillColor="#9BA3B0"
+            android:pathData="M68,22 L132,22 L178,68 L178,132 L132,178 L68,178 L22,132 L22,68 Z" />
+        <!-- red accent band -->
+        <path
+            android:fillColor="#E31E24"
+            android:pathData="M74,36 L126,36 L164,74 L164,126 L126,164 L74,164 L36,126 L36,74 Z" />
+        <!-- ink window ring -->
+        <path
+            android:fillColor="#0A0A0A"
+            android:pathData="M78,44 L122,44 L156,78 L156,122 L122,156 L78,156 L44,122 L44,78 Z" />
+        <!-- window backing -->
+        <path
+            android:fillColor="#121A33"
+            android:pathData="M82,52 L118,52 L148,82 L148,118 L118,148 L82,148 L52,118 L52,82 Z" />
+        <!-- clock face -->
+        <path
+            android:fillColor="#F5F1E6"
+            android:strokeColor="#0A0A0A"
+            android:strokeWidth="6"
+            android:pathData="M60,100 a40,40 0 1,0 80,0 a40,40 0 1,0 -80,0 Z" />
+        <!-- tick marks -->
+        <path android:fillColor="#0A0A0A" android:pathData="M97.4,70 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z" />
+        <path android:fillColor="#0A0A0A" android:pathData="M127.4,100 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z" />
+        <path android:fillColor="#0A0A0A" android:pathData="M97.4,130 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z" />
+        <path android:fillColor="#0A0A0A" android:pathData="M67.4,100 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z" />
+        <!-- hands, set at the classic 10:10 watch-branding angle -->
+        <path
+            android:strokeColor="#0A0A0A"
+            android:strokeWidth="5.6"
+            android:strokeLineCap="round"
+            android:pathData="M100,100 L88,82" />
+        <path
+            android:strokeColor="#0A0A0A"
+            android:strokeWidth="4.6"
+            android:strokeLineCap="round"
+            android:pathData="M100,100 L118,78" />
+        <path android:fillColor="#E31E24" android:pathData="M95.6,100 a4.4,4.4 0 1,0 8.8,0 a4.4,4.4 0 1,0 -8.8,0 Z" />
+    </group>
+</vector>

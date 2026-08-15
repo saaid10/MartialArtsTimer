@@ -1,7 +1,6 @@
 package com.saee.combattimer.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,16 +8,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.hypot
 
 /**
  * A digital-clock style readout built from drawn segments (7 per digit, plus a
@@ -81,14 +80,31 @@ private fun DrawScope.drawDigit(active: Set<Char>, onColor: Color, offColor: Col
     val y2 = h - inset
     val ym = h / 2f
 
+    // 6-cornered hexagon segment: pointed tips at the endpoints, flat shoulders
+    // between — the sharp LED-clock shape, not a rounded stroke.
     fun segment(key: Char, start: Offset, end: Offset) {
-        drawLine(
-            color = if (key in active) onColor else offColor,
-            start = start,
-            end = end,
-            strokeWidth = thickness,
-            cap = StrokeCap.Round
-        )
+        val dx = end.x - start.x
+        val dy = end.y - start.y
+        val len = hypot(dx, dy).takeIf { it != 0f } ?: 1f
+        val ux = dx / len
+        val uy = dy / len
+        val px = -uy
+        val py = ux
+        val half = thickness / 2f
+
+        val innerStart = Offset(start.x + ux * half, start.y + uy * half)
+        val innerEnd = Offset(end.x - ux * half, end.y - uy * half)
+
+        val hexagon = Path().apply {
+            moveTo(start.x, start.y)
+            lineTo(innerStart.x + px * half, innerStart.y + py * half)
+            lineTo(innerEnd.x + px * half, innerEnd.y + py * half)
+            lineTo(end.x, end.y)
+            lineTo(innerEnd.x - px * half, innerEnd.y - py * half)
+            lineTo(innerStart.x - px * half, innerStart.y - py * half)
+            close()
+        }
+        drawPath(hexagon, color = if (key in active) onColor else offColor)
     }
 
     segment('a', Offset(x0, y0), Offset(x2, y0))
@@ -115,9 +131,16 @@ private fun ColonSeparator(height: Dp, onColor: Color) {
 
 @Composable
 private fun Dot(size: Dp, color: Color) {
-    androidx.compose.foundation.layout.Box(
-        modifier = Modifier
-            .size(size)
-            .background(color, CircleShape)
-    )
+    Canvas(modifier = Modifier.size(size)) {
+        val w = this.size.width
+        val h = this.size.height
+        val diamond = Path().apply {
+            moveTo(w / 2f, 0f)
+            lineTo(w, h / 2f)
+            lineTo(w / 2f, h)
+            lineTo(0f, h / 2f)
+            close()
+        }
+        drawPath(diamond, color = color)
+    }
 }

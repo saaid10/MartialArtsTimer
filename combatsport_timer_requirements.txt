@@ -1,0 +1,263 @@
+COMBAT TIMER - REQUIREMENTS
+============================
+Doc purpose: running record of requirements gathered during planning discussion.
+Status: COMPLETE - all requirements clarified and decided.
+
+1. PURPOSE
+----------
+Interval/round timer app for combat sports and general interval training.
+Lets the user pick a fixed sport ruleset (MMA, Boxing, Judo) and start a
+round/rest countdown immediately, or use a fully custom "Interval" mode.
+
+2. PLATFORM / ARCHITECTURE
+---------------------------
+- Android: native app, Kotlin + Jetpack Compose.
+    - Package/namespace: com.saee.combattimer
+    - minSdk 26, targetSdk/compileSdk 34, Java/Kotlin target 17.
+    - Compose BOM 2024.09.00, Material3.
+- iOS: native SwiftUI port, under ios/CombatTimer/.
+    - Same sport presets, same timer state machine, same manga-poster
+      visual theme, same 4 sound cues as Android.
+    - Minimum deployment iOS 16.0.
+    - DECISION MADE: source files only, no .xcodeproj checked in - Xcode
+      project files are fragile to hand-author, so the workflow is: create
+      the project shell in Xcode, then drag in the CombatTimer/ source
+      folder and the 4 bundled audio files.
+    - Setup still pending: app icon (AppIcon.appiconset, needs a 1024x1024
+      PNG) and the one-time Xcode project creation step above - the iOS
+      app isn't runnable until that manual step happens.
+- Storage/backend: NONE. Fully local, no persistence, no accounts, no
+  network calls. All timer state is in-memory only and resets on app
+  restart - there is no workout history, no login, no sync. DECISION MADE:
+  this is a pure stopwatch-style utility, not a logging app.
+- Orientation: Android activity is locked to portrait.
+- Navigation (3 screens, both platforms): Sport Selection -> Config
+  (only shown for configurable presets) -> Timer. "EXIT" on the Timer
+  screen returns to Sport Selection; "BACK" on Config returns to
+  Selection without starting.
+- DECISION MADE: once a preset is loaded into the Timer screen, the
+  sport/discipline itself cannot be changed in place - the user must hit
+  EXIT and go back to Selection to pick a different sport.
+
+3. CORE FEATURES
+-----------------
+3a. Sport presets (8 total)
+
+    | Preset               | Rounds        | Round length | Rest    | Notes |
+    |----------------------|---------------|--------------|---------|-------|
+    | MMA Amateur          | 3 (fixed)     | 3:00         | 1:00    | |
+    | MMA Pro (Regular)    | 3 (fixed)     | 5:00         | 1:00    | |
+    | MMA Pro (Title)      | 5 (fixed)     | 5:00         | 1:00    | |
+    | Boxing Amateur       | 3 (fixed)     | 3:00         | 1:00    | |
+    | Boxing Professional  | 4-12 (config) | 3:00 (fixed) | 1:00    | round count only field the user can change; default 4 |
+    | Judo                 | 1 (fixed)     | 4:00         | 0 (none)| golden score on tie, see 3d |
+    | Interval Setting     | 1-30 (config) | configurable | configurable | fully custom, see 3b |
+    | Shark Tank           | 1-20 (config) | configurable | 0 (none)| back-to-back rounds, no rest field at all, see 3b |
+
+    - DECISION MADE: MMA is split into 3 separate presets (Amateur,
+      Pro Regular, Pro Title), surfaced as three separate selectable
+      cards, since their round counts/lengths differ.
+    - DECISION MADE: MMA Pro Regular fights use a 1:00 rest between
+      rounds.
+
+3b. Configurability rule
+    - DECISION MADE: 3 of the 8 presets show a Config screen before
+      starting - Boxing Professional (round count only, range 4-12,
+      3:00 rounds and 1:00 rest stay fixed), Interval Setting (fully
+      configurable: round duration, rest duration, AND round count), and
+      Shark Tank (round duration AND round count, but no rest field at
+      all - rest is always 0, not just fixed-and-displayed like Boxing
+      Professional's). Every other preset (MMA Amateur/Pro Regular/Pro
+      Title, Boxing Amateur, Judo) is fixed and starts immediately on
+      tap - no config step.
+    - DECISION MADE: Interval Setting's round duration and rest duration
+      both step in 5-second increments. Concrete bounds:
+        * Round/rest duration: min 0:05, max 20:00 (1200s), step 5s.
+        * Round count: 1-30, step 1.
+    - DECISION MADE: Boxing Professional's round count field steps by 1,
+      clamped to the 4-12 range; round length and rest are displayed
+      read-only ("ROUND 3:00 - REST 1:00 - FIXED") and cannot be edited
+      on this screen.
+    - DECISION MADE: Shark Tank's round duration steps the same as
+      Interval Setting's (5s step, 0:05-20:00 range); round count ranges
+      1-20, step 1. No rest duration control is shown - the screen reads
+      "NO REST - BACK-TO-BACK ROUNDS" instead of a rest stepper.
+
+3c. Timer engine / phases
+    - Phases: IDLE -> ROUND -> REST -> (repeat) -> ... -> FINISHED, with
+      Judo taking a branch through AWAITING_GOLDEN_SCORE_DECISION and
+      GOLDEN_SCORE instead of going straight to FINISHED.
+    - Ticks once per second. ROUND and REST count DOWN from their
+      configured duration to 0. GOLDEN_SCORE counts UP from 0 (see 3d).
+    - Controls: START (from IDLE), PAUSE/RESUME (toggle while running),
+      RESET (re-loads the CURRENT configured rounds/round-length/rest-
+      length back to IDLE - i.e. reset keeps the user's chosen numbers,
+      it does not revert to the preset's original defaults).
+    - DECISION MADE: screen is kept awake (keepScreenOn) for the whole
+      time the timer is actively running (ROUND, REST, or GOLDEN_SCORE),
+      and released when paused/stopped, so the display doesn't sleep
+      mid-round.
+    - DECISION MADE: when the configured rest duration is 0 (Shark Tank),
+      advancing past a round goes straight from ROUND to the next ROUND
+      with no REST phase at all - not even a one-tick pass-through. A
+      pass-through REST would otherwise still fire the rest-end bell and
+      briefly show a rest countdown for a break that isn't supposed to
+      exist.
+
+3d. Judo golden score
+    - DECISION MADE: golden score is NOT a fixed extra round. After the
+      single 4:00 round ends, the app enters AWAITING_GOLDEN_SCORE_
+      DECISION and shows a prompt ("IF SCORES ARE LEVEL, START GOLDEN
+      SCORE.") with two choices:
+        * "MATCH DECIDED" -> finishes the match immediately (FINISHED).
+        * "GOLDEN SCORE" -> enters GOLDEN_SCORE phase, an open-ended
+          stopwatch that counts UP from 0:00 with no time cap (display
+          shows a "+" prefix and the phase label "SUDDEN DEATH"). The
+          user manually ends the match from this phase whenever a score
+          is landed - there is no automatic golden-score sound/end
+          condition.
+
+3e. Sound cues (4 bundled audio files)
+    - wood_clap_triple.mp3 -> "10-second clapper": played ONCE when a
+      ROUND reaches exactly 10 seconds remaining.
+    - mma_horn.mp3 (Android) / mma_horn.wav (iOS) -> round-end horn:
+      played once when a ROUND's countdown reaches 0.
+    - timer_beep.mp3 -> rest countdown beep: played once per second
+      during the LAST 5 seconds of a REST phase only (remaining = 5, 4,
+      3, 2, 1).
+    - boxing_bell.mp3 -> played once when a REST phase's countdown
+      reaches 0 (marks the round resuming after rest).
+    - DECISION MADE: audio plays via SoundPool on Android and AVAudioPlayer
+      with a `.playback` session category on iOS, so cues are audible
+      even if the phone's ringer/silent switch is off.
+    - DECISION MADE (Android, supersedes the original USAGE_ALARM choice):
+      cues use AudioAttributes USAGE_MEDIA/CONTENT_TYPE_SONIFICATION
+      (STREAM_MUSIC), not USAGE_ALARM. On the device this was tested on,
+      the ALARM stream had no dedicated per-device volume level for a
+      Bluetooth A2DP speaker - it silently fell back to a low, stuck
+      level no in-app volume call could reach, so cues stayed quiet on a
+      connected gym speaker regardless of the phone's alarm volume.
+      MEDIA/STREAM_MUSIC doesn't have that problem: Bluetooth speakers
+      implement real volume sync (AVRCP) for it, since every music app
+      depends on it. It's still unaffected by the ringer/silent switch
+      (only Ring/Notification/System streams are), so the "audible with
+      the phone silenced" requirement still holds. iOS is unaffected by
+      this change - unchanged from the original .playback decision.
+    - DECISION MADE (Android): rather than forcing the shared Media volume
+      to max (which would also blast whatever else the user is playing,
+      e.g. Spotify during sparring), cues request transient "duck" audio
+      focus (AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK) for just the moment each
+      cue plays - the system automatically lowers other apps' playback so
+      the cue cuts through, then hands full volume back afterward. No
+      volume level is ever set directly; the user's own volume choice
+      (phone buttons or the connected speaker's own controls) is never
+      overridden.
+    - DECISION MADE (Android): the duck engages ~1.5s BEFORE a cue starts
+      and releases ~1.5s AFTER it ends, rather than snapping in/out right
+      on top of the sound, which sounded jarring. The timer's tick loop
+      gives the sound engine a ~2-second heads-up ahead of each cue so it
+      can land the duck's start exactly 1.5s early without shifting the
+      cue's own on-the-second timing (round/rest accuracy is never
+      sacrificed for this). Includes a self-releasing safety net in case
+      an expected cue never actually plays (e.g. pause/reset mid-count),
+      so the duck can't get stuck engaged forever.
+    - DECISION MADE (Android): the round-end horn (mma_horn.mp3) has an
+      audible fade tail - loud until ~1.4-1.8s in, then a quiet decay out
+      to the file's actual end at ~2.7s (confirmed via `ffmpeg
+      -af silencedetect`). Using the full file length made the post-cue
+      duck hold noticeably longer than the other 3 cues. The duck now
+      releases based on the horn's perceptually-loud length (~1.8s)
+      instead of the full file - this only changes when the duck lets
+      go, not what actually gets played (the full clip, fade tail
+      included, still plays in full).
+    - DECISION MADE: no mute toggle and no vibration/haptics - sound cues
+      always play at fixed volume; this is intentional, not an oversight.
+
+3f. Visual theme
+    - DECISION MADE: "manga/comic-book poster" visual style, shared
+      across both platforms: outlined comic-style headline text
+      (ComicText), ink-style borders, a speed-line burst effect behind
+      the digital clock, a boxing-ring-rope divider graphic, and a
+      seven-segment digital-clock-style readout for the countdown.
+    - Color palette (CombatColors): Night/Paper/Bone neutrals, plus
+      accent colors per phase - CornerRed (round), CornerGreen (rest),
+      CornerAmber (golden score), ImpactYellow, GloveRed, PanelNavy,
+      BurstBlueLight, RopeGrey. Sport cards on the Selection screen are
+      accented by discipline: MMA = GloveRed, Boxing = ImpactYellow,
+      Judo = BurstBlueLight, Interval = Paper.
+
+4. OPEN QUESTIONS / NOT YET CLARIFIED
+--------------------------------------
+- Should rest-end play a different sound than a bell (e.g. a buzzer/horn
+  sample) to more clearly distinguish it from round-start?
+- No settings screen (no volume control, no mute, no vibration toggle) -
+  worth adding now that the app ships on two platforms with different
+  default ringer/silent-switch behavior (iOS silent switch vs. Android
+  ringer mode)? Partially addressed on Android by the auto-ducking
+  behavior (see 3e) - the user's own Media volume is never overridden,
+  and other apps' audio ducks and restores automatically - but there is
+  still no in-app mute/volume/haptics control on either platform.
+- iOS asset extension mismatch: Android bundles mma_horn.mp3; iOS
+  references mma_horn.wav. Confirm the iOS build has a .wav counterpart
+  prepared, or unify to .mp3 like the other 3 cues.
+- iOS setup: no .xcodeproj or app icon yet - is the manual Xcode import
+  step (see section 2) still pending?
+- No accessibility or localization pass yet - all UI strings are
+  hardcoded English (no strings.xml translations, no VoiceOver/TalkBack-
+  specific handling).
+
+5. STATUS
+----------
+Android: fully built, functional native app.
+iOS: source-complete SwiftUI port mirroring the Android app, but not yet
+buildable as-is - still needs the one-time Xcode project creation +
+asset-import step (see section 2) before it can run on device/simulator.
+
+6. CHANGE LOG
+--------------
+- Initial requirements captured from user's opening request: MMA Amateur/
+  Pro/Title, Boxing Amateur/Pro, Judo, and a configurable Interval mode;
+  10-second "clapper" warning, round-end buzzer, rest-end buzzer,
+  5-second rest countdown beep; native Android app.
+- Decided: Boxing Professional's round-count field is also user-
+  configurable (4-12), in addition to Interval Setting.
+- Decided: Judo golden score is an open-ended count-up "sudden death"
+  phase entered via an explicit user prompt/decision after the 4:00
+  round ends, not an automatic fixed extra round.
+- Decided: 10-second warning sound is wood_clap_triple.mp3 ("the
+  10-second clapper").
+- Decided: round-end sound is an air-horn sample (mma_horn); rest-end
+  sound is a bell sample (boxing_bell).
+- Added: native iOS SwiftUI port under ios/CombatTimer/, matching the
+  Android app's sport presets, timer logic, manga-poster visual theme,
+  and 4 sound cues.
+- Decided: no persistence/accounts/network - the app is a pure in-memory
+  session timer with no workout history, on both platforms.
+- Reorganized: this document restructured into numbered sections,
+  matching the sibling training-tracker project's requirements.txt
+  format.
+- Fixed (Android): SoundPool's load-completion listener was registered
+  AFTER the 4 soundPool.load() calls in the constructor, a race where
+  the loads could complete (and fire the listener) before it was even
+  attached - the completion was then lost permanently, so cues silently
+  never played on every subsequent call, with no error or crash. Fixed
+  by registering the listener before any load() call.
+- Changed (Android): sound cues moved from USAGE_ALARM/STREAM_ALARM to
+  USAGE_MEDIA/STREAM_MUSIC - see 3e for why (ALARM had no working
+  per-device volume for a connected Bluetooth speaker on the device
+  tested).
+- Added (Android): transient audio ducking of other apps' playback
+  (e.g. Spotify) around each cue, with a ~1.5s lead-in before the cue
+  and ~1.5s tail after, instead of forcing the shared volume to max -
+  see 3e.
+- Fixed (Android): the round-end horn's duck held through its full file
+  length even though the last ~1s is an inaudible fade tail; now uses
+  the horn's measured perceptually-loud duration instead - see 3e.
+- Added: new "Shark Tank" preset (8th sport) - round duration and round
+  count configurable, no rest field, back-to-back rounds; only the
+  10-second clapper and round-end horn play - see 3a/3b.
+- Fixed: advancing past a round when rest is configured to 0 previously
+  still passed through a one-tick REST phase (playing the rest-end bell,
+  briefly showing a rest countdown); now skips straight to the next
+  round - see 3c. Needed for Shark Tank to have a genuine zero-length
+  break.

@@ -69,7 +69,7 @@ fun ConfigScreen(
         )
         RingRopeDivider(modifier = Modifier.padding(bottom = 24.dp))
 
-        if (preset.roundsConfigurable) {
+        if (preset.roundsConfigurable && !preset.roundSecondsConfigurable) {
             IntStepperRow(
                 label = "ROUNDS",
                 value = rounds,
@@ -80,6 +80,32 @@ fun ConfigScreen(
             Spacer(Modifier.height(14.dp))
             Text(
                 text = "ROUND ${formatClock(preset.roundSeconds)}  ·  REST ${formatClock(preset.restSeconds)}  ·  FIXED",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp,
+                color = CombatColors.Bone.copy(alpha = 0.5f)
+            )
+        }
+
+        if (preset.roundSecondsConfigurable) {
+            IntStepperRow(
+                label = "ROUND DURATION",
+                value = roundSeconds,
+                onChange = { roundSeconds = it.coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS) },
+                step = DURATION_STEP,
+                display = formatClock(roundSeconds)
+            )
+            Spacer(Modifier.height(20.dp))
+            IntStepperRow(
+                label = "ROUNDS",
+                value = rounds,
+                onChange = { rounds = it.coerceIn(preset.roundsRange.first, preset.roundsRange.last) },
+                step = 1,
+                display = rounds.toString()
+            )
+            Spacer(Modifier.height(14.dp))
+            Text(
+                text = "NO REST · BACK-TO-BACK ROUNDS",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 0.5.sp,

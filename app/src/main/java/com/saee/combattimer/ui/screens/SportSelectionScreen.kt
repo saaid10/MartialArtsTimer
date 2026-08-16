@@ -73,6 +73,7 @@ private fun accentFor(type: SportType): Color = when (type) {
     SportType.BOXING_AMATEUR, SportType.BOXING_PROFESSIONAL -> CombatColors.ImpactYellow
     SportType.JUDO -> CombatColors.BurstBlueLight
     SportType.INTERVAL -> CombatColors.Paper
+    SportType.SHARK_TANK -> CombatColors.GloveRedDark
 }
 
 @Composable
@@ -127,6 +128,11 @@ private fun SportPreset.summary(): String {
         restSeconds > 0 -> ", ${formatClock(restSeconds)} rest"
         else -> ", no rest"
     }
-    val configurablePart = if (fullyConfigurable) " · configurable" else if (roundsConfigurable) " · rounds configurable" else ""
+    val configurablePart = when {
+        fullyConfigurable -> " · configurable"
+        roundSecondsConfigurable -> " · configurable"
+        roundsConfigurable -> " · rounds configurable"
+        else -> ""
+    }
     return "$roundsPart × ${formatClock(roundSeconds)}$restPart$configurablePart"
 }

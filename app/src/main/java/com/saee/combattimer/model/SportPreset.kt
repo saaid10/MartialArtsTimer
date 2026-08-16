@@ -7,12 +7,15 @@ enum class SportType {
     BOXING_AMATEUR,
     BOXING_PROFESSIONAL,
     JUDO,
-    INTERVAL
+    INTERVAL,
+    SHARK_TANK
 }
 
 /**
  * A fixed sport ruleset. Only [INTERVAL] allows configuring round/rest duration;
- * only [BOXING_PROFESSIONAL] allows configuring the round count. Every other
+ * only [BOXING_PROFESSIONAL] allows configuring the round count; only
+ * [SHARK_TANK] allows configuring round duration and round count with no rest
+ * field at all (it's always 0 - back-to-back rounds, no break). Every other
  * sport starts exactly as defined here.
  */
 data class SportPreset(
@@ -24,9 +27,10 @@ data class SportPreset(
     val hasGoldenScore: Boolean = false,
     val roundsConfigurable: Boolean = false,
     val roundsRange: IntRange = 1..1,
-    val fullyConfigurable: Boolean = false
+    val fullyConfigurable: Boolean = false,
+    val roundSecondsConfigurable: Boolean = false
 ) {
-    val isConfigurable: Boolean get() = roundsConfigurable || fullyConfigurable
+    val isConfigurable: Boolean get() = roundsConfigurable || fullyConfigurable || roundSecondsConfigurable
 }
 
 object SportPresets {
@@ -90,6 +94,18 @@ object SportPresets {
         fullyConfigurable = true
     )
 
+    /** Back-to-back rounds with no rest between them - just the 10-second clapper and the buzzer. */
+    val SHARK_TANK = SportPreset(
+        type = SportType.SHARK_TANK,
+        displayName = "Shark Tank",
+        defaultRounds = 3,
+        roundSeconds = 180,
+        restSeconds = 0,
+        roundsConfigurable = true,
+        roundsRange = 1..20,
+        roundSecondsConfigurable = true
+    )
+
     val ALL: List<SportPreset> = listOf(
         MMA_AMATEUR,
         MMA_PRO_REGULAR,
@@ -97,6 +113,7 @@ object SportPresets {
         BOXING_AMATEUR,
         BOXING_PROFESSIONAL,
         JUDO,
-        INTERVAL
+        INTERVAL,
+        SHARK_TANK
     )
 }

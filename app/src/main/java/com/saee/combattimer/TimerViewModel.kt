@@ -100,6 +100,12 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun tickRound() {
         val remaining = _uiState.value.secondsRemaining - 1
+        // Give the sound engine a heads-up a couple seconds before each cue actually fires, so it
+        // can start ducking other apps' audio ahead of time rather than snapping it in right as
+        // the cue starts. The cue itself still plays at the exact correct second below.
+        if (remaining == TEN_SECOND_WARNING + PRE_DUCK_LEAD_SECONDS || remaining == PRE_DUCK_LEAD_SECONDS) {
+            soundEngine.prepareDuck(leadMs = PRE_DUCK_LEAD_SECONDS * 1000L)
+        }
         when {
             remaining == TEN_SECOND_WARNING -> {
                 soundEngine.playTenSecondClapper()
@@ -115,6 +121,9 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun tickRest() {
         val remaining = _uiState.value.secondsRemaining - 1
+        if (remaining == REST_COUNTDOWN_BEEPS + PRE_DUCK_LEAD_SECONDS || remaining == PRE_DUCK_LEAD_SECONDS) {
+            soundEngine.prepareDuck(leadMs = PRE_DUCK_LEAD_SECONDS * 1000L)
+        }
         when {
             remaining in 1..REST_COUNTDOWN_BEEPS -> {
                 soundEngine.playCountdownBeep()
@@ -137,6 +146,15 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
     private fun advancePastRoundEnd() {
         val state = _uiState.value
         when {
+            // No rest configured (e.g. Shark Tank): go straight into the next round rather than
+            // passing through a one-tick REST phase, which would otherwise still play the
+            // rest-end bell and briefly show a rest countdown for a break that isn't supposed to
+            // exist at all.
+            state.currentRound < state.totalRounds && state.restSeconds <= 0 -> {
+                _uiState.update {
+                    it.copy(currentRound = it.currentRound + 1, secondsRemaining = it.roundSeconds)
+                }
+            }
             state.currentRound < state.totalRounds -> {
                 _uiState.update { it.copy(phase = TimerPhase.REST, secondsRemaining = it.restSeconds) }
             }
@@ -158,6 +176,9 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     private companion object {
         const val TEN_SECOND_WARNING = 10
+        // How many seconds ahead of a cue to nudge SoundEngine to start ducking. Must be >=
+        // SoundEngine's own PRE_DUCK_LEAD_MS (1500ms) so there's always slack to wait out.
+        const val PRE_DUCK_LEAD_SECONDS = 2
         const val REST_COUNTDOWN_BEEPS = 5
         val RESUMABLE_PHASES = setOf(TimerPhase.ROUND, TimerPhase.REST, TimerPhase.GOLDEN_SCORE)
     }

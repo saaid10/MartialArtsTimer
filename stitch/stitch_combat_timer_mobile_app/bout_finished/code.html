@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0e1323;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "error": "#ffb4ab", "primary-container": "#e31e24", "surface-container-low": "#161b2b", "surface-container-lowest": "#080d1d", "secondary": "#b7c4ff", "on-secondary-fixed": "#001551", "surface-container": "#1a1f30", "surface-variant": "#2f3446", "error-container": "#93000a", "on-surface-variant": "#e7bdb8", "tertiary-fixed-dim": "#ebc300", "on-secondary-container": "#a8b9ff", "primary": "#ffb4ab", "tertiary-container": "caa800", "on-tertiary-fixed": "#231b00", "secondary-fixed": "#dce1ff", "on-secondary": "#002681", "secondary-container": "#043ebd", "on-tertiary": "#3b2f00", "tertiary-fixed": "#ffe177", "on-secondary-fixed-variant": "#0039b4", "on-tertiary-container": "#4c3e00", "primary-fixed-dim": "#ffb4ab", "on-surface": "#dee1f9", "outline": "#ae8883", "inverse-on-surface": "#2b3041", "secondary-fixed-dim": "#b7c4ff", "on-error-container": "#ffdad6", "primary-fixed": "#ffdad6", "on-primary-fixed-variant": "#93000d", "surface-container-high": "#25293a", "on-primary-fixed": "#410002", "background": "#0e1323", "surface-container-highest": "#2f3446", "on-tertiary-fixed-variant": "#554500", "on-error": "#690005", "surface": "#0e1323", "on-background": "#dee1f9", "outline-variant": "#5d3f3c", "on-primary": "#690006", "on-primary-container": "#fffafa", "inverse-surface": "#dee1f9", "surface-tint": "#ffb4ab", "surface-bright": "#34394a", "surface-dim": "#0e1323", "inverse-primary": "#c00014", "tertiary": "#ebc300" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin": "1.25rem", "space-xl": "2.25rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "space-md": "1rem" }, fontFamily: { "body-md": ["Space Grotesk"], "headline-lg": ["Bebas Neue"], "label-sm": ["Space Grotesk"], "headline-xl": ["Bebas Neue"], "display-timer-mobile": ["Bebas Neue"], "headline-xl-mobile": ["Bebas Neue"], "body-lg": ["Space Grotesk"], "title-md": ["Space Grotesk"], "headline-md": ["Bebas Neue"], "label-lg": ["Space Grotesk"], "display-timer": ["Bebas Neue"] }, fontSize: { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "36px", "letterSpacing": "0.04em", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }], "headline-xl": ["48px", { "lineHeight": "52px", "letterSpacing": "0.05em", "fontWeight": "400" }], "display-timer-mobile": ["72px", { "lineHeight": "72px", "letterSpacing": "0.04em", "fontWeight": "400" }], "headline-xl-mobile": ["36px", { "lineHeight": "40px", "letterSpacing": "0.05em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "22px", "fontWeight": "500" }], "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "28px", "letterSpacing": "0.03em", "fontWeight": "400" }], "label-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }], "display-timer": ["96px", { "lineHeight": "96px", "letterSpacing": "0.04em", "fontWeight": "400" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md text-body-md flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><button class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-primary transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="Combat Timer Emblem" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCHh4wprz6YqJB6Ep7dBjXclJ8JIAmpSB-GfF-n1xMY4kExvNFcOIdnu2OGTN1Ak5Sz-0bWHeqgiEL4TzdujVB4L6IwmkU2c-Wz9M5WzH0rVGgiwSHXcnH-Ko8f-KUunSKQslOkWbuAOQ44wLnHNRTd8aOOBwDrtBZvY1FZL4zfJ1vHg1Qdtq6DAPnglJYbpCcPNePTSqYK-8mTvK0GBO9qU0bruYChRnwB1c6po4a6"/><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-wider text-on-surface uppercase leading-none">COMBAT TIMER</span><span class="font-label-sm text-label-sm text-tertiary uppercase tracking-widest">Active Sparring Match</span></div></div><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full px-margin pb-safe space-y-space-md select-none overflow-x-hidden">
+<!-- Dynamic Shonen Victory Hero Banner -->
+<div class="relative w-full mt-2 rounded-xl bg-surface-container-lowest overflow-hidden shadow-[4px_4px_0px_#000000]">
+<!-- Dynamic Speed Line Burst Canvas -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40 mix-blend-screen" preserveaspectratio="none" viewbox="0 0 400 220">
+<defs>
+<radialgradient cx="50%" cy="45%" id="starburst-glow" r="60%">
+<stop offset="0%" stop-color="#FFD400" stop-opacity="0.9"></stop>
+<stop offset="45%" stop-color="#E31E24" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#0E1323" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+<rect fill="url(#starburst-glow)" height="220" width="400"></rect>
+<!-- Radial Action Lines -->
+<polygon fill="#FFD400" opacity="0.3" points="200,90 0,0 25,0"></polygon>
+<polygon fill="#FFD400" opacity="0.25" points="200,90 90,0 120,0"></polygon>
+<polygon fill="#FFD400" opacity="0.35" points="200,90 190,0 215,0"></polygon>
+<polygon fill="#FFD400" opacity="0.2" points="200,90 280,0 310,0"></polygon>
+<polygon fill="#FFD400" opacity="0.3" points="200,90 380,0 400,0"></polygon>
+<polygon fill="#FFD400" opacity="0.25" points="200,90 400,70 400,95"></polygon>
+<polygon fill="#FFD400" opacity="0.3" points="200,90 400,160 400,185"></polygon>
+<polygon fill="#FFD400" opacity="0.25" points="200,90 330,220 360,220"></polygon>
+<polygon fill="#FFD400" opacity="0.35" points="200,90 240,220 265,220"></polygon>
+<polygon fill="#FFD400" opacity="0.2" points="200,90 140,220 165,220"></polygon>
+<polygon fill="#FFD400" opacity="0.3" points="200,90 40,220 70,220"></polygon>
+<polygon fill="#FFD400" opacity="0.25" points="200,90 0,160 0,185"></polygon>
+<polygon fill="#FFD400" opacity="0.3" points="200,90 0,70 0,95"></polygon>
+</svg>
+<!-- Halftone Screentone Texture Layer -->
+<div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#dee1f9 1.5px, transparent 1.5px); background-size: 8px 8px;"></div>
+<!-- Impact Ribbon Container -->
+<div class="relative z-10 flex flex-col items-center justify-center pt-6 pb-5 px-4 text-center">
+<!-- Top Tactical Pill -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-high rounded-full shadow-[2px_2px_0px_#000000] mb-2 transform -rotate-1">
+<span class="material-symbols-outlined text-tertiary text-[16px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-widest">CHAMPIONSHIP VERDICT</span>
+</div>
+<!-- Rotated Impact Badge "FINISHED!" -->
+<div class="relative my-1 transform -rotate-2 scale-105 active:scale-100 transition-transform">
+<div class="absolute -inset-1 bg-surface-container-lowest skew-x-[-12deg] shadow-[4px_4px_0px_#000000]"></div>
+<div class="relative bg-primary-container px-6 py-2 skew-x-[-12deg] shadow-[4px_4px_0px_#000000]">
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile uppercase tracking-wider text-on-primary-container leading-none drop-shadow-[2px_2px_0px_#000000]">
+            FINISHED!
+          </h1>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-[0.2em] mt-3">
+        FINAL BELL • MAT SUPREMACY ACHIEVED
+      </p>
+</div>
+</div>
+<!-- Center Victory Summary Panel -->
+<div class="relative w-full rounded-xl bg-surface-container p-5 shadow-[4px_4px_0px_#000000] overflow-hidden">
+<!-- Top Header Ribbon with Sharp Manga Notch -->
+<div class="flex items-center justify-between pb-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-6 bg-tertiary shadow-[1px_1px_0px_#000000]"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">BOUT SUMMARY</span>
+<span class="font-headline-md text-headline-md text-on-surface uppercase leading-none">5 ROUNDS COMPLETE</span>
+</div>
+</div>
+<div class="px-2.5 py-1 bg-tertiary-container rounded shadow-[2px_2px_0px_#000000]">
+<span class="font-label-sm text-label-sm text-on-tertiary-container uppercase tracking-wider font-bold">100% QUOTA</span>
+</div>
+</div>
+<!-- Massive Time Display Clustered with Segmented Round Bar -->
+<div class="flex flex-col items-center justify-center py-4 bg-surface-container-lowest rounded-lg shadow-[inset_0px_2px_4px_rgba(0,0,0,0.5)]">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">TOTAL ELAPSED BOUT TIME</span>
+<div class="font-display-timer-mobile text-display-timer-mobile text-on-surface tracking-wider leading-none mt-1">
+        29:00
+      </div>
+<!-- Manga Round Meter -->
+<div class="w-11/12 grid grid-cols-5 gap-1.5 mt-3 px-2">
+<div class="h-2.5 bg-primary-container rounded-sm shadow-[1px_1px_0px_#000000]"></div>
+<div class="h-2.5 bg-primary-container rounded-sm shadow-[1px_1px_0px_#000000]"></div>
+<div class="h-2.5 bg-primary-container rounded-sm shadow-[1px_1px_0px_#000000]"></div>
+<div class="h-2.5 bg-primary-container rounded-sm shadow-[1px_1px_0px_#000000]"></div>
+<div class="h-2.5 bg-tertiary rounded-sm shadow-[1px_1px_0px_#000000]"></div>
+</div>
+<div class="w-11/12 flex justify-between items-center text-[10px] text-secondary font-label-sm mt-1 px-2 uppercase tracking-wider">
+<span>R1</span><span>R2</span><span>R3</span><span>R4</span><span class="text-tertiary font-bold">CHAMPION R5</span>
+</div>
+</div>
+<!-- Detailed Stats Pill 2x2 Grid -->
+<div class="grid grid-cols-2 gap-2.5 mt-4">
+<!-- Work Duration -->
+<div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-lg shadow-[3px_3px_0px_#000000]">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#000000]">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase truncate">ACTIVE WORK</span>
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">25:00</span>
+</div>
+</div>
+<!-- Rest Duration -->
+<div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-lg shadow-[3px_3px_0px_#000000]">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#000000]">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">bedtime</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase truncate">CORNER REST</span>
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">04:00</span>
+</div>
+</div>
+<!-- Calorie Burn -->
+<div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-lg shadow-[3px_3px_0px_#000000]">
+<div class="w-10 h-10 rounded bg-tertiary-container flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#000000]">
+<span class="material-symbols-outlined text-on-tertiary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase truncate">EST. BURN</span>
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">380 KCAL</span>
+</div>
+</div>
+<!-- Average Heart Rate -->
+<div class="flex items-center gap-3 p-3 bg-surface-container-high rounded-lg shadow-[3px_3px_0px_#000000]">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#000000]">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase truncate">AVG INTENSITY</span>
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">154 BPM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Combat Conditioning Feedback Banner -->
+<div class="relative w-full rounded-lg bg-surface-container-low p-3.5 flex items-center gap-3 shadow-[3px_3px_0px_#000000]">
+<div class="w-1.5 self-stretch bg-tertiary rounded-full"></div>
+<div class="flex flex-col flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider">ATHLETE REPUTATION: UNSTOPPABLE</span>
+<span class="font-body-md text-body-md text-on-surface line-clamp-1">Cardio threshold maintained across all 5 championship frames.</span>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[24px]">verified</span>
+</div>
+<!-- Primary Action CTA Buttons (>60px Height for Taped Hands / Gloves) -->
+<div class="flex flex-col gap-3 pt-1">
+<!-- RESTART FIGHT CTA Button -->
+<button class="group w-full h-[64px] min-h-[64px] bg-primary-container text-on-primary-container rounded-lg shadow-[5px_5px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] transition-all flex items-center justify-center gap-3 px-4" onclick="triggerHapticFeedback(this)" type="button">
+<span class="material-symbols-outlined text-[28px] transition-transform group-hover:-rotate-90">replay</span>
+<span class="font-headline-lg text-headline-lg uppercase tracking-wider">RESTART FIGHT</span>
+</button>
+<!-- NEW FIGHT Secondary Button -->
+<button class="group w-full h-[64px] min-h-[64px] bg-tertiary text-on-tertiary rounded-lg shadow-[5px_5px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] transition-all flex items-center justify-center gap-3 px-4" onclick="triggerHapticFeedback(this)" type="button">
+<span class="material-symbols-outlined text-[28px] transition-transform group-hover:scale-110">sports_kabaddi</span>
+<span class="font-headline-lg text-headline-lg uppercase tracking-wider">NEW BOUT SETUP</span>
+</button>
+</div>
+<!-- Post-Fight Operations (Log & Share) -->
+<div class="grid grid-cols-2 gap-3 pt-1 pb-4">
+<!-- Log to Combat History -->
+<button class="h-[56px] min-h-[56px] bg-surface-container text-on-surface rounded-lg shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] transition-all flex items-center justify-center gap-2 px-3" id="log-btn" onclick="handleLogHistory(this)" type="button">
+<span class="material-symbols-outlined text-secondary text-[20px]" id="log-icon">bookmark_add</span>
+<span class="font-label-lg text-label-lg uppercase tracking-wider truncate" id="log-text">LOG TO HISTORY</span>
+</button>
+<!-- Share Bout Stats -->
+<button class="h-[56px] min-h-[56px] bg-surface-container text-on-surface rounded-lg shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] transition-all flex items-center justify-center gap-2 px-3" onclick="handleShareStats(this)" type="button">
+<span class="material-symbols-outlined text-secondary text-[20px]">share</span>
+<span class="font-label-lg text-label-lg uppercase tracking-wider truncate">SHARE STATS</span>
+</button>
+</div>
+</div>
+<script>
+  function triggerHapticFeedback(btn) {
+    if (window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate([25, 40, 25]);
+    }
+  }
+
+  function handleLogHistory(btn) {
+    triggerHapticFeedback(btn);
+    const icon = document.getElementById('log-icon');
+    const text = document.getElementById('log-text');
+    
+    btn.classList.remove('bg-surface-container', 'text-on-surface');
+    btn.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+    icon.textContent = 'check_circle';
+    text.textContent = 'SAVED TO MAT LOG';
+    
+    setTimeout(() => {
+      btn.classList.remove('bg-tertiary-container', 'text-on-tertiary-container');
+      btn.classList.add('bg-surface-container', 'text-on-surface');
+      icon.textContent = 'bookmark_added';
+      text.textContent = 'RECORDED';
+    }, 2000);
+  }
+
+  function handleShareStats(btn) {
+    triggerHapticFeedback(btn);
+    if (navigator.share) {
+      navigator.share({
+        title: 'Bout Complete - 5 Rounds Mastered',
+        text: 'Finished 5 full championship rounds on Combat Timer! Time: 29:00 | Est. Burn: 380 KCAL | Avg HR: 154 BPM.',
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      const originalText = btn.querySelector('span:last-child').textContent;
+      btn.querySelector('span:last-child').textContent = 'COPIED TO CLIPBOARD';
+      setTimeout(() => {
+        btn.querySelector('span:last-child').textContent = originalText;
+      }, 1800);
+    }
+  }
+</script></main></body></html>
